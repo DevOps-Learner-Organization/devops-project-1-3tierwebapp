@@ -19,16 +19,11 @@ pipeline {
             steps {
                 sh '''
                     cd backend
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install -r requirements.txt
-                    # basic gate: every .py file must compile cleanly
-                    python -m py_compile $(find src -name "*.py")
-                    # when you add real tests:  pytest -q
+                    python3 -m py_compile $(find src -name "*.py")
                 '''
             }
         }
-
+     
         stage('Deploy to app server') {
             steps {
                 sshagent(['app-server-ssh']) {
