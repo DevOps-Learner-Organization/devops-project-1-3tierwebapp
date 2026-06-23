@@ -1,0 +1,48 @@
+name: CI/CD Pipeline inside GitHub Runner
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  DEPLOY_DIR: ${{ github.workspace }}
+  COMPOSE: "docker compose -p mytodoapp"
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Test (backend)
+        run: |
+          cd backend
+          python3 -m py_compile $(find src -name "*.py")
+
+      - name: Deploy .env file
+        run: |
+          # Creates the .env file locally in the runner workspace
+          echo "${{ secrets.TODO_ENV }}" > .env
+
+      - name: Start Docker Compose Services
+        run: |
+          ${COMPOSE} up --build -d
+          ${COMPOSE} ps
+
+      - name: Smoke test
+        run: |
+          sleep 20
+          # The runner tests against its own localhost on port 8080
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
+          echo "Homepage returned HTTP $code"
+          test "$code" = "200"
+
+      - name: Notify Success
+        if: success()
+        run: echo "Workflow successful. App verified on runner."
+
+      - name: Notify Failure
+        if: failure()
+        run: echo "Failed — check the stage logs above"
