@@ -8,7 +8,7 @@ pipeline {
         COMPOSE    = "docker compose -p mytodoapp"
     }
 
-    // Add this triggers block to listen for git webhooks
+    // Add this triggers block to listen for git webhooks new
     triggers {
         githubPush() // Use upstream() or gitlab() if not using GitHub
     }
