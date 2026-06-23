@@ -1,4 +1,4 @@
-# Docker Deployment Todo App With webHook
+# Docker Deployment Todo App "Tuesday"
 
 This repository contains the source code and configuration files for deploying a Todo application using Docker and Docker Compose.
 
