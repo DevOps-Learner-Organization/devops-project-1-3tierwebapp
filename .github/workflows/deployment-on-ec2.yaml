@@ -42,7 +42,7 @@ jobs:
       - name: Deploy .env file
         run: |
           echo "${{ secrets.TODO_ENV }}" > .env
-          scp .env ${APP_HOST}:${DEPLOY_DIR}/.env
+          scp .env ubuntu@${APP_HOST}:${DEPLOY_DIR}/.env
           rm .env
 
       - name: Restart Docker Compose Services
