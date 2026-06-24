@@ -47,7 +47,7 @@ jobs:
 
       - name: Restart Docker Compose Services
         run: |
-          ssh ${APP_HOST} "
+          ssh ubuntu@${APP_HOST} "
             cd ${DEPLOY_DIR} &&
             ${COMPOSE} up --build -d &&
             ${COMPOSE} ps
